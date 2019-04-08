@@ -1400,6 +1400,26 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
             m_pEventClick = pControl;
         }
         break;
+    case WM_RBUTTONUP:
+        {
+            POINT pt = {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
+            m_ptLastMousePos = pt;
+            CControlUI* pControl = FindControl(pt);
+            if (NULL == pControl) break;
+            if (pControl->GetManager() != this) break;
+            TEventUI event = {0};
+            event.Type = UIEVENT_RBUTTONUP;
+            event.pSender = pControl;
+            event.wParam = wParam;
+            event.lParam = lParam;
+            event.ptMouse = pt;
+            event.wKeyState = (WORD)wParam;
+            event.dwTimestamp = ::GetTickCount();
+            CControlUI* pClick = m_pEventClick;
+            m_pEventClick = NULL;
+            pClick->Event(event);
+        }
+        break;
     case WM_CONTEXTMENU:
         {
             if( m_pRoot == NULL ) break;
@@ -1562,6 +1582,18 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
             HWND hWndChild = (HWND) lParam;
             lRes = ::SendMessage(hWndChild, OCM__BASE + uMsg, wParam, lParam);
             return true;
+        }
+        break;
+
+    case WM_IME_STARTCOMPOSITION:       // IME
+        {
+            if (m_pFocus == NULL) break;
+
+            TEventUI event = { 0 };
+            event.Type = UIEVENT_IME_STARTCOMPOSITION;
+            event.wParam = wParam;
+            event.lParam = lParam;
+            m_pFocus->Event(event);
         }
         break;
     default:

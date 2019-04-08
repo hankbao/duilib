@@ -1741,7 +1741,7 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
         }
         return;
     }
-    if( event.Type == UIEVENT_BUTTONUP )
+    if( event.Type == UIEVENT_BUTTONUP)
     {
         if( (m_uButtonState & UISTATE_CAPTURED) != 0 ) {
             m_uButtonState &= ~UISTATE_CAPTURED;
@@ -2181,7 +2181,7 @@ void CListLabelElementUI::DoEvent(TEventUI& event)
     {
         return;
     }
-    if( event.Type == UIEVENT_BUTTONUP )
+    if( event.Type == UIEVENT_BUTTONUP || event.Type == UIEVENT_RBUTTONUP)
     {
         return;
     }
@@ -2839,7 +2839,7 @@ void CListContainerElementUI::DoEvent(TEventUI& event)
         }
         return;
     }
-    if( event.Type == UIEVENT_BUTTONUP ) 
+    if( event.Type == UIEVENT_BUTTONUP || event.Type == UIEVENT_RBUTTONUP)
     {
         return;
     }
