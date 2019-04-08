@@ -44,7 +44,7 @@ typedef enum EVENTTYPE_UI
     UIEVENT_COMMAND,
     UIEVENT_IME_STARTCOMPOSITION,
     UIEVENT__LAST,
-};
+} EVENTTYPE_UI;
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
