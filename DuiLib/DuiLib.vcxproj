@@ -169,7 +169,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <BaseAddress>0x11000000</BaseAddress>
-      <ImportLibrary>../lib/DuiLib_d.lib</ImportLibrary>
+      <ImportLibrary>../lib/DuiLib.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <Bscmake>
@@ -209,7 +209,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <BaseAddress>0x11000000</BaseAddress>
-      <ImportLibrary>../Lib/DuiLib_ud.lib</ImportLibrary>
+      <ImportLibrary>../Lib/DuiLib.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <Bscmake>
@@ -246,7 +246,7 @@
       <OutputFile>../bin/DuiLib.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <BaseAddress>0x11000000</BaseAddress>
-      <ImportLibrary>../Lib/DuiLib_u.lib</ImportLibrary>
+      <ImportLibrary>../Lib/DuiLib.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <Bscmake>
