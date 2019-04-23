@@ -117,6 +117,7 @@
       <PrecompiledHeaderOutputFile>.\Build\Release/DuiLib.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -162,7 +163,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>../bin/DuiLib_d.dll</OutputFile>
+      <OutputFile>../bin/DuiLib.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>.\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -203,7 +204,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>../bin/DuiLib_ud.dll</OutputFile>
+      <OutputFile>../bin/DuiLib.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
@@ -235,13 +236,14 @@
       <PrecompiledHeaderOutputFile>.\Build\Release_u/DuiLib.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0406</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>../bin/DuiLib_u.dll</OutputFile>
+      <OutputFile>../bin/DuiLib.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <BaseAddress>0x11000000</BaseAddress>
       <ImportLibrary>../Lib/DuiLib_u.lib</ImportLibrary>
