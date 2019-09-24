@@ -32,3 +32,6 @@ QQDemo/Debug/mt.dep
 # Project files
 CMakeFiles/
 .vs/
+*.VC.db
+*.VC.opendb
+Build/
