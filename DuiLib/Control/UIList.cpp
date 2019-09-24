@@ -105,7 +105,7 @@ bool CListUI::SetItemIndex(CControlUI* pControl, int iIndex)
     if( iOrginIndex == iIndex ) return true;
 
     IListItemUI* pSelectedListItem = NULL;
-    if( m_iCurSel >= 0 ) pSelectedListItem = 
+    if( m_iCurSel >= 0 ) pSelectedListItem =
         static_cast<IListItemUI*>(GetItemAt(m_iCurSel)->GetInterface(DUI_CTR_ILISTITEM));
     if( !m_pList->SetItemIndex(pControl, iIndex) ) return false;
     int iMinIndex = min(iOrginIndex, iIndex);
@@ -134,7 +134,7 @@ bool CListUI::SetMultiItemIndex(CControlUI* pStartControl, int iCount, int iNewS
     if (iNewStartIndex + iCount > GetCount()) return false;
 
     IListItemUI* pSelectedListItem = NULL;
-    if( m_iCurSel >= 0 ) pSelectedListItem = 
+    if( m_iCurSel >= 0 ) pSelectedListItem =
         static_cast<IListItemUI*>(GetItemAt(m_iCurSel)->GetInterface(DUI_CTR_ILISTITEM));
     if( !m_pList->SetMultiItemIndex(pStartControl, iCount, iNewStartIndex) ) return false;
     int iMinIndex = min(iStartIndex, iNewStartIndex);
@@ -379,12 +379,12 @@ void CListUI::DoEvent(TEventUI& event)
         return;
     }
 
-    if( event.Type == UIEVENT_SETFOCUS ) 
+    if( event.Type == UIEVENT_SETFOCUS )
     {
         m_bFocused = true;
         return;
     }
-    if( event.Type == UIEVENT_KILLFOCUS ) 
+    if( event.Type == UIEVENT_KILLFOCUS )
     {
         m_bFocused = false;
         return;
@@ -878,10 +878,10 @@ void CListUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
     else if( _tcscmp(pstrName, _T("itemtextpadding")) == 0 ) {
         RECT rcTextPadding = { 0 };
         LPTSTR pstr = NULL;
-        rcTextPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
-        rcTextPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
-        rcTextPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
-        rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
+        rcTextPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
+        rcTextPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+        rcTextPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+        rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
         SetItemTextPadding(rcTextPadding);
     }
     else if( _tcscmp(pstrName, _T("itemtextcolor")) == 0 ) {
@@ -1176,7 +1176,7 @@ void CListBodyUI::SetPos(RECT rc, bool bNeedInvalidate)
 
     // Determine the minimum size
     SIZE szAvailable = { rc.right - rc.left, rc.bottom - rc.top };
-    if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() ) 
+    if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() )
         szAvailable.cx += m_pHorizontalScrollBar->GetScrollRange();
 
     int iChildPadding = m_iChildPadding;
@@ -1206,7 +1206,7 @@ void CListBodyUI::SetPos(RECT rc, bool bNeedInvalidate)
         szControlAvailable.cx -= rcPadding.left + rcPadding.right;
         iControlMaxWidth = pControl->GetFixedWidth();
         iControlMaxHeight = pControl->GetFixedHeight();
-        if (iControlMaxWidth <= 0) iControlMaxWidth = pControl->GetMaxWidth(); 
+        if (iControlMaxWidth <= 0) iControlMaxWidth = pControl->GetMaxWidth();
         if (iControlMaxHeight <= 0) iControlMaxHeight = pControl->GetMaxHeight();
         if (szControlAvailable.cx > iControlMaxWidth) szControlAvailable.cx = iControlMaxWidth;
         if (szControlAvailable.cy > iControlMaxHeight) szControlAvailable.cy = iControlMaxHeight;
@@ -1242,7 +1242,7 @@ void CListBodyUI::SetPos(RECT rc, bool bNeedInvalidate)
     if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() ) {
         iPosX -= m_pHorizontalScrollBar->GetScrollPos();
     }
-    
+
     int iAdjustable = 0;
     for( int it2 = 0; it2 < m_items.GetSize(); it2++ ) {
         CControlUI* pControl = static_cast<CControlUI*>(m_items[it2]);
@@ -1258,7 +1258,7 @@ void CListBodyUI::SetPos(RECT rc, bool bNeedInvalidate)
         szControlAvailable.cx -= rcPadding.left + rcPadding.right;
         iControlMaxWidth = pControl->GetFixedWidth();
         iControlMaxHeight = pControl->GetFixedHeight();
-        if (iControlMaxWidth <= 0) iControlMaxWidth = pControl->GetMaxWidth(); 
+        if (iControlMaxWidth <= 0) iControlMaxWidth = pControl->GetMaxWidth();
         if (iControlMaxHeight <= 0) iControlMaxHeight = pControl->GetMaxHeight();
         if (szControlAvailable.cx > iControlMaxWidth) szControlAvailable.cx = iControlMaxWidth;
         if (szControlAvailable.cy > iControlMaxHeight) szControlAvailable.cy = iControlMaxHeight;
@@ -1296,7 +1296,7 @@ void CListBodyUI::DoEvent(TEventUI& event)
 		if (event.Type == UIEVENT_SCROLLWHEEL) {
 			if (m_pHorizontalScrollBar != NULL && m_pHorizontalScrollBar->IsVisible() && m_pHorizontalScrollBar->IsEnabled()) {
 				RECT rcHorizontalScrollBar = m_pHorizontalScrollBar->GetPos();
-				if( ::PtInRect(&rcHorizontalScrollBar, event.ptMouse) ) 
+				if( ::PtInRect(&rcHorizontalScrollBar, event.ptMouse) )
 				{
 					switch( LOWORD(event.wParam) ) {
 					case SB_LINEUP:
@@ -1451,7 +1451,7 @@ SIZE CListHeaderUI::EstimateSize(SIZE szAvailable)
 //
 
 CListHeaderItemUI::CListHeaderItemUI() : m_bDragable(true), m_uButtonState(0), m_iSepWidth(4),
-m_uTextStyle(DT_CENTER | DT_VCENTER | DT_SINGLELINE), m_dwTextColor(0), m_dwSepColor(0), 
+m_uTextStyle(DT_CENTER | DT_VCENTER | DT_SINGLELINE), m_dwTextColor(0), m_dwSepColor(0),
 m_iFont(-1), m_bShowHtml(false)
 {
 	SetTextPadding(CDuiRect(2, 0, 2, 0));
@@ -1668,7 +1668,7 @@ void CListHeaderItemUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
     else if( _tcscmp(pstrName, _T("endellipsis")) == 0 ) {
         if( _tcscmp(pstrValue, _T("true")) == 0 ) m_uTextStyle |= DT_END_ELLIPSIS;
         else m_uTextStyle &= ~DT_END_ELLIPSIS;
-    }  
+    }
     else if( _tcscmp(pstrName, _T("multiline")) == 0 ) {
         if (_tcscmp(pstrValue, _T("true")) == 0) {
             m_uTextStyle  &= ~DT_SINGLELINE;
@@ -1686,10 +1686,10 @@ void CListHeaderItemUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	else if( _tcscmp(pstrName, _T("textpadding")) == 0 ) {
 		RECT rcTextPadding = { 0 };
 		LPTSTR pstr = NULL;
-		rcTextPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
-		rcTextPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
-		rcTextPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
-		rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
+		rcTextPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
+		rcTextPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+		rcTextPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+		rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
 		SetTextPadding(rcTextPadding);
 	}
     else if( _tcscmp(pstrName, _T("showhtml")) == 0 ) SetShowHtml(_tcscmp(pstrValue, _T("true")) == 0);
@@ -1716,11 +1716,11 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
         return;
     }
 
-    if( event.Type == UIEVENT_SETFOCUS ) 
+    if( event.Type == UIEVENT_SETFOCUS )
     {
         Invalidate();
     }
-    if( event.Type == UIEVENT_KILLFOCUS ) 
+    if( event.Type == UIEVENT_KILLFOCUS )
     {
         Invalidate();
     }
@@ -1741,11 +1741,11 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
         }
         return;
     }
-    if( event.Type == UIEVENT_BUTTONUP)
+    if( event.Type == UIEVENT_BUTTONUP )
     {
         if( (m_uButtonState & UISTATE_CAPTURED) != 0 ) {
             m_uButtonState &= ~UISTATE_CAPTURED;
-            if( GetParent() ) 
+            if( GetParent() )
                 GetParent()->NeedParentUpdate();
         }
         else if( (m_uButtonState & UISTATE_PUSHED) != 0 ) {
@@ -1764,11 +1764,11 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
             else {
                 rc.left -= ptLastMouse.x - event.ptMouse.x;
             }
-            
+
             if( rc.right - rc.left > GetMinWidth() ) {
                 m_cxyFixed.cx = rc.right - rc.left;
                 ptLastMouse = event.ptMouse;
-                if( GetParent() ) 
+                if( GetParent() )
                     GetParent()->NeedParentUpdate();
             }
         }
@@ -1881,10 +1881,10 @@ void CListHeaderItemUI::PaintText(HDC hDC)
 //
 //
 
-CListElementUI::CListElementUI() : 
+CListElementUI::CListElementUI() :
 m_iIndex(-1),
 m_iDrawIndex(0),
-m_pOwner(NULL), 
+m_pOwner(NULL),
 m_bSelected(false),
 m_uButtonState(0)
 {
@@ -1974,7 +1974,7 @@ void CListElementUI::Invalidate()
             if( pHorizontalScrollBar && pHorizontalScrollBar->IsVisible() ) rc.bottom -= pHorizontalScrollBar->GetFixedHeight();
 
             RECT invalidateRc = m_rcItem;
-            if( !::IntersectRect(&invalidateRc, &m_rcItem, &rc) ) 
+            if( !::IntersectRect(&invalidateRc, &m_rcItem, &rc) )
             {
                 return;
             }
@@ -1986,7 +1986,7 @@ void CListElementUI::Invalidate()
             {
                 rcTemp = invalidateRc;
                 rcParent = pParent->GetPos();
-                if( !::IntersectRect(&invalidateRc, &rcTemp, &rcParent) ) 
+                if( !::IntersectRect(&invalidateRc, &rcTemp, &rcParent) )
                 {
                     return;
                 }
@@ -2177,11 +2177,11 @@ void CListLabelElementUI::DoEvent(TEventUI& event)
         }
         return;
     }
-    if( event.Type == UIEVENT_MOUSEMOVE ) 
+    if( event.Type == UIEVENT_MOUSEMOVE )
     {
         return;
     }
-    if( event.Type == UIEVENT_BUTTONUP || event.Type == UIEVENT_RBUTTONUP)
+    if( event.Type == UIEVENT_BUTTONUP || event.Type == UIEVENT_RBUTTONUP )
     {
         return;
     }
@@ -2225,7 +2225,7 @@ SIZE CListLabelElementUI::EstimateSize(SIZE szAvailable)
         else if (pInfo->uFixedHeight > 0) return CDuiSize(m_cxyFixed.cx, pInfo->uFixedHeight);
     }
 
-    if ((pInfo->uTextStyle & DT_SINGLELINE) == 0 && 
+    if ((pInfo->uTextStyle & DT_SINGLELINE) == 0 &&
         (szAvailable.cx != m_szAvailableLast.cx || szAvailable.cy != m_szAvailableLast.cy)) {
             m_bNeedEstimateSize = true;
     }
@@ -2243,7 +2243,7 @@ SIZE CListLabelElementUI::EstimateSize(SIZE szAvailable)
         m_nFontLast = pInfo->nFont;
         m_uTextStyleLast = pInfo->uTextStyle;
         m_rcTextPaddingLast = pInfo->rcTextPadding;
-        
+
         m_cxyFixedLast = m_cxyFixed;
         if (m_cxyFixedLast.cy == 0) {
             m_cxyFixedLast.cy = pInfo->uFixedHeight;
@@ -2374,7 +2374,7 @@ void CListTextElementUI::SetText(int iIndex, LPCTSTR pstrText)
     TListInfoUI* pInfo = m_pOwner->GetListInfo();
     if( iIndex < 0 || iIndex >= pInfo->nColumns ) return;
     m_bNeedEstimateSize = true;
-    
+
     while( m_aTexts.GetSize() < pInfo->nColumns ) { m_aTexts.Add(NULL); }
 
     CDuiString* pText = static_cast<CDuiString*>(m_aTexts[iIndex]);
@@ -2417,7 +2417,7 @@ void CListTextElementUI::DoEvent(TEventUI& event)
                 ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_HAND)));
                 return;
             }
-        }      
+        }
     }
     if( event.Type == UIEVENT_BUTTONUP && IsEnabled() ) {
         for( int i = 0; i < m_nLinks; i++ ) {
@@ -2471,8 +2471,8 @@ SIZE CListTextElementUI::EstimateSize(SIZE szAvailable)
         if (cxyFixed.cy > 0) return cxyFixed;
         else if (pInfo->uFixedHeight > 0) return CDuiSize(cxyFixed.cx, pInfo->uFixedHeight);
     }
-    
-    if ((pInfo->uTextStyle & DT_SINGLELINE) == 0 && 
+
+    if ((pInfo->uTextStyle & DT_SINGLELINE) == 0 &&
         (szAvailable.cx != m_szAvailableLast.cx || szAvailable.cy != m_szAvailableLast.cy)) {
             m_bNeedEstimateSize = true;
     }
@@ -2590,7 +2590,7 @@ void CListTextElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
                 pInfo->nFont, pInfo->uTextStyle);
 
             m_nLinks += nLinks;
-            nLinks = lengthof(m_rcLinks) - m_nLinks; 
+            nLinks = lengthof(m_rcLinks) - m_nLinks;
         }
     }
     else {
@@ -2612,7 +2612,7 @@ void CListTextElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
             pInfo->nFont, pInfo->uTextStyle);
 
         m_nLinks += nLinks;
-        nLinks = lengthof(m_rcLinks) - m_nLinks; 
+        nLinks = lengthof(m_rcLinks) - m_nLinks;
     }
 
     for( int i = m_nLinks; i < lengthof(m_rcLinks); i++ ) {
@@ -2625,10 +2625,10 @@ void CListTextElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
 //
 //
 
-CListContainerElementUI::CListContainerElementUI() : 
+CListContainerElementUI::CListContainerElementUI() :
 m_iIndex(-1),
 m_iDrawIndex(0),
-m_pOwner(NULL), 
+m_pOwner(NULL),
 m_bSelected(false),
 m_bExpandable(false),
 m_bExpand(false),
@@ -2720,7 +2720,7 @@ void CListContainerElementUI::Invalidate()
             if( pHorizontalScrollBar && pHorizontalScrollBar->IsVisible() ) rc.bottom -= pHorizontalScrollBar->GetFixedHeight();
 
             RECT invalidateRc = m_rcItem;
-            if( !::IntersectRect(&invalidateRc, &m_rcItem, &rc) ) 
+            if( !::IntersectRect(&invalidateRc, &m_rcItem, &rc) )
             {
                 return;
             }
@@ -2732,7 +2732,7 @@ void CListContainerElementUI::Invalidate()
             {
                 rcTemp = invalidateRc;
                 rcParent = pParent->GetPos();
-                if( !::IntersectRect(&invalidateRc, &rcTemp, &rcParent) ) 
+                if( !::IntersectRect(&invalidateRc, &rcTemp, &rcParent) )
                 {
                     return;
                 }
@@ -2790,7 +2790,7 @@ bool CListContainerElementUI::IsExpanded() const
 bool CListContainerElementUI::Expand(bool bExpand)
 {
     ASSERT(m_pOwner);
-    if( m_pOwner == NULL ) return false;  
+    if( m_pOwner == NULL ) return false;
     if( bExpand == m_bExpand ) return true;
     m_bExpand = bExpand;
     if( m_bExpandable ) {
@@ -2839,7 +2839,7 @@ void CListContainerElementUI::DoEvent(TEventUI& event)
         }
         return;
     }
-    if( event.Type == UIEVENT_BUTTONUP || event.Type == UIEVENT_RBUTTONUP)
+    if( event.Type == UIEVENT_BUTTONUP || event.Type == UIEVENT_RBUTTONUP )
     {
         return;
     }
@@ -2957,7 +2957,7 @@ SIZE CListContainerElementUI::EstimateSize(SIZE szAvailable)
 
 CListHBoxElementUI::CListHBoxElementUI()
 {
-    
+
 }
 
 LPCTSTR CListHBoxElementUI::GetClass() const
@@ -2992,7 +2992,7 @@ void CListHBoxElementUI::SetPos(RECT rc, bool bNeedInvalidate)
             if( iColumnIndex >= pInfo->nColumns ) continue;
 
             RECT rcPadding = pControl->GetPadding();
-            RECT rcItem = { pInfo->rcColumn[iColumnIndex].left + rcPadding.left, m_rcItem.top + rcPadding.top, 
+            RECT rcItem = { pInfo->rcColumn[iColumnIndex].left + rcPadding.left, m_rcItem.top + rcPadding.top,
                 pInfo->rcColumn[iColumnIndex].right - rcPadding.right, m_rcItem.bottom - rcPadding.bottom };
             if (pInfo->iVLineSize > 0 && iColumnIndex < pInfo->nColumns - 1) {
                 rcItem.right -= pInfo->iVLineSize;
@@ -3011,7 +3011,7 @@ void CListHBoxElementUI::SetPos(RECT rc, bool bNeedInvalidate)
             }
 
             RECT rcPadding = pControl->GetPadding();
-            RECT rcItem = { m_rcItem.left + rcPadding.left, m_rcItem.top + rcPadding.top, 
+            RECT rcItem = { m_rcItem.left + rcPadding.left, m_rcItem.top + rcPadding.top,
                 m_rcItem.right - rcPadding.right, m_rcItem.bottom - rcPadding.bottom };
             pControl->SetPos(rcItem, false);
         }
