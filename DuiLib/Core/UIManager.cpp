@@ -1596,6 +1596,23 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
             m_pFocus->Event(event);
         }
         break;
+	case WM_DROPFILES:
+		{
+			POINT pt = { 0 };
+			::DragQueryPoint((HDROP)wParam, &pt);
+
+			CControlUI* pControl = FindControl(pt);
+			if (NULL == pControl) break;
+			if (pControl->GetManager() != this) break;
+
+			TEventUI event = { 0 };
+			event.Type = UIEVENT_DROPFILES;
+			event.pSender = pControl;
+			event.wParam = wParam;
+			event.lParam = lParam;
+			pControl->Event(event);
+		}
+		break;
     default:
         break;
     }
