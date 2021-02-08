@@ -669,8 +669,10 @@ bool CPaintManagerUI::PreMessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam,
         {
            // Tabbing between controls
            if( wParam == VK_TAB ) {
-               if( m_pFocus && m_pFocus->IsVisible() && m_pFocus->IsEnabled() && _tcsstr(m_pFocus->GetClass(), DUI_CTR_RICHEDIT) != NULL ) {
-                   if( static_cast<CRichEditUI*>(m_pFocus)->IsWantTab() ) return false;
+               if( m_pFocus && m_pFocus->IsVisible() && m_pFocus->IsEnabled()) {
+                   if( _tcsstr(m_pFocus->GetClass(), DUI_CTR_RICHEDIT) != NULL && static_cast<CRichEditUI*>(m_pFocus)->IsWantTab() ) return false;
+				   // FIXME: *DIRTY HACK* to support keyboard tab in WkeBrowser
+				   if (_tcsstr(m_pFocus->GetClass(), _T("WkeBrowser")) != NULL) return false;
                }
                SetNextTabControl(::GetKeyState(VK_SHIFT) >= 0);
                return true;
