@@ -46,6 +46,7 @@ namespace DuiLib
 
 	SIZE CTileLayoutUI::GetItemSize() const
 	{
+		if (m_pManager != NULL) return m_pManager->GetDPIObj()->Scale(m_szItem);
 		return m_szItem;
 	}
 

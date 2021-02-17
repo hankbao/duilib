@@ -51,23 +51,145 @@ typedef struct tagTIMERINFO
 
 /////////////////////////////////////////////////////////////////////////////////////
 
-tagTDrawInfo::tagTDrawInfo()
+tagTDrawInfo::tagTDrawInfo() : pImageInfo(nullptr)
 {
 	Clear();
 }
 
-tagTDrawInfo::tagTDrawInfo(LPCTSTR lpsz)
+void tagTDrawInfo::Parse(LPCTSTR pStrImage, LPCTSTR pStrModify, CPaintManagerUI *pManager)
 {
-	Clear();
-	sDrawString = lpsz;
-}
+	// 1、aaa.jpg
+	// 2、file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' corner='0,0,0,0' 
+	// mask='#FF0000' fade='255' hole='false' xtiled='false' ytiled='false'
+	sDrawString = pStrImage;
+	sDrawModify = pStrModify;
+	sImageName = pStrImage;
 
+	CDuiString sItem;
+	CDuiString sValue;
+	LPTSTR pstr = NULL;
+	for (int i = 0; i < 2; ++i) {
+		if (i == 1) pStrImage = pStrModify;
+		if (!pStrImage) continue;
+		while (*pStrImage != _T('\0')) {
+			sItem.Empty();
+			sValue.Empty();
+			while (*pStrImage > _T('\0') && *pStrImage <= _T(' ')) pStrImage = ::CharNext(pStrImage);
+			while (*pStrImage != _T('\0') && *pStrImage != _T('=') && *pStrImage > _T(' ')) {
+				LPTSTR pstrTemp = ::CharNext(pStrImage);
+				while (pStrImage < pstrTemp) {
+					sItem += *pStrImage++;
+				}
+			}
+			while (*pStrImage > _T('\0') && *pStrImage <= _T(' ')) pStrImage = ::CharNext(pStrImage);
+			if (*pStrImage++ != _T('=')) break;
+			while (*pStrImage > _T('\0') && *pStrImage <= _T(' ')) pStrImage = ::CharNext(pStrImage);
+			if (*pStrImage++ != _T('\'')) break;
+			while (*pStrImage != _T('\0') && *pStrImage != _T('\'')) {
+				LPTSTR pstrTemp = ::CharNext(pStrImage);
+				while (pStrImage < pstrTemp) {
+					sValue += *pStrImage++;
+				}
+			}
+			if (*pStrImage++ != _T('\'')) break;
+			if (!sValue.IsEmpty()) {
+				if (sItem == _T("file") || sItem == _T("res")) {
+					sImageName = sValue;
+				}
+				else if (sItem == _T("restype")) {
+					sResType = sValue;
+				}
+				else if (sItem == _T("dest")) {
+					rcDest.left = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);
+					rcDest.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+					rcDest.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+					rcDest.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+					if (pManager != NULL) pManager->GetDPIObj()->Scale(&rcDest);
+				}
+				else if (sItem == _T("source")) {
+					rcSource.left = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);
+					rcSource.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+					rcSource.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+					rcSource.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+					if (pManager != NULL) pManager->GetDPIObj()->Scale(&rcSource);
+				}
+				else if (sItem == _T("corner")) {
+					rcCorner.left = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);
+					rcCorner.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+					rcCorner.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+					rcCorner.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+					if (pManager != NULL) pManager->GetDPIObj()->Scale(&rcCorner);
+				}
+				else if (sItem == _T("mask")) {
+					if (sValue[0] == _T('#')) dwMask = _tcstoul(sValue.GetData() + 1, &pstr, 16);
+					else dwMask = _tcstoul(sValue.GetData(), &pstr, 16);
+				}
+				else if (sItem == _T("fade")) {
+					uFade = (BYTE)_tcstoul(sValue.GetData(), &pstr, 10);
+				}
+				else if (sItem == _T("hole")) {
+					bHole = (_tcsicmp(sValue.GetData(), _T("true")) == 0);
+				}
+				else if (sItem == _T("xtiled")) {
+					bTiledX = (_tcsicmp(sValue.GetData(), _T("true")) == 0);
+				}
+				else if (sItem == _T("ytiled")) {
+					bTiledY = (_tcsicmp(sValue.GetData(), _T("true")) == 0);
+				}
+				else if (sItem == _T("hsl")) {
+					bHSL = (_tcsicmp(sValue.GetData(), _T("true")) == 0);
+				}
+				else if (sItem == _T("size")) {
+					szImage.cx = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);
+					szImage.cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+				}
+				else if (sItem == _T("align")) {
+					sAlign = sValue;
+				}
+				else if (sItem == _T("padding")) {
+					rcPadding.left = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);
+					rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+					rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+					rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+					if (pManager != NULL) pManager->GetDPIObj()->Scale(&rcPadding);
+				}
+			}
+			if (*pStrImage++ != _T(' ')) break;
+		}
+	}
+
+	// 调整DPI资源
+	if (pManager != NULL && pManager->GetDPIObj()->GetScale() != 100) {
+		CDuiString sScale;
+		sScale.Format(_T("@%d."), pManager->GetDPIObj()->GetScale());
+		sImageName.Replace(_T("."), sScale);
+	}
+}
 void tagTDrawInfo::Clear()
 {
 	sDrawString.Empty();
-    sImageName.Empty();
-	::ZeroMemory(&bLoaded, sizeof(tagTDrawInfo) - offsetof(tagTDrawInfo, bLoaded));
+	sDrawModify.Empty();
+	sImageName.Empty();
+
+	bLoaded = false;
+
+	memset(&rcDest, 0, sizeof(RECT));
+	memset(&rcBmpPart, 0, sizeof(RECT));
+	memset(&rcScale9, 0, sizeof(RECT));
+	memset(&rcDestOffset, 0, sizeof(RECT));
+	memset(&rcSource, 0, sizeof(RECT));
+	memset(&rcCorner, 0, sizeof(RECT));
+
+	dwMask = 0;
 	uFade = 255;
+	bHole = false;
+	bTiledX = false;
+	bTiledY = false;
+	bHSL = false;
+
+	szImage.cx = szImage.cy = 0;
+	sAlign.Empty();
+	memset(&rcPadding, 0, sizeof(RECT));
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -122,6 +244,7 @@ m_bOffscreenPaint(true),
 m_bUsedVirtualWnd(false),
 m_bAsyncNotifyPosted(false),
 m_bForceUseSharedRes(false),
+m_pDPI(NULL),
 m_nOpacity(0xFF),
 m_bLayered(false),
 m_bLayeredChanged(false)
@@ -1811,6 +1934,89 @@ void CPaintManagerUI::Term()
     }
 }
 
+CDPI * DuiLib::CPaintManagerUI::GetDPIObj()
+{
+	if (m_pDPI == NULL) {
+		m_pDPI = new CDPI;
+	}
+	return m_pDPI;
+}
+
+void DuiLib::CPaintManagerUI::SetDPI(int iDPI)
+{
+	int scale1 = GetDPIObj()->GetScale();
+	GetDPIObj()->SetScale(iDPI);
+	int scale2 = GetDPIObj()->GetScale();
+	ResetDPIAssets();
+	RECT rcWnd = { 0 };
+	::GetWindowRect(GetPaintWindow(), &rcWnd);
+	RECT*  prcNewWindow = &rcWnd;
+	if (!::IsZoomed(GetPaintWindow())) {
+		RECT rc = rcWnd;
+		rc.right = rcWnd.left + (rcWnd.right - rcWnd.left) * scale2 / scale1;
+		rc.bottom = rcWnd.top + (rcWnd.bottom - rcWnd.top) * scale2 / scale1;
+		prcNewWindow = &rc;
+	}
+	SetWindowPos(GetPaintWindow(), NULL, prcNewWindow->left, prcNewWindow->top, prcNewWindow->right - prcNewWindow->left, prcNewWindow->bottom - prcNewWindow->top, SWP_NOZORDER | SWP_NOACTIVATE);
+	if (GetRoot() != NULL) GetRoot()->NeedUpdate();
+}
+
+void DuiLib::CPaintManagerUI::SetAllDPI(int iDPI)
+{
+	for (int i = 0; i < m_aPreMessages.GetSize(); i++) {
+		CPaintManagerUI* pManager = static_cast<CPaintManagerUI*>(m_aPreMessages[i]);
+		pManager->SetDPI(iDPI);
+	}
+}
+
+void DuiLib::CPaintManagerUI::ResetDPIAssets()
+{
+	// TODO: enable RemoveAllDrawInfos
+	//RemoveAllDrawInfos();
+	RemoveAllImages();
+
+	for (int it = 0; it < m_ResInfo.m_CustomFonts.GetSize(); it++) {
+		TFontInfo* pFontInfo = static_cast<TFontInfo*>(m_ResInfo.m_CustomFonts.Find(m_ResInfo.m_CustomFonts[it]));
+		RebuildFont(pFontInfo);
+	}
+	RebuildFont(&m_ResInfo.m_DefaultFontInfo);
+
+	for (int it = 0; it < m_SharedResInfo.m_CustomFonts.GetSize(); it++) {
+		TFontInfo* pFontInfo = static_cast<TFontInfo*>(m_SharedResInfo.m_CustomFonts.Find(m_SharedResInfo.m_CustomFonts[it]));
+		RebuildFont(pFontInfo);
+	}
+	RebuildFont(&m_SharedResInfo.m_DefaultFontInfo);
+
+	CDuiPtrArray *richEditList = FindSubControlsByClass(GetRoot(), _T("RichEditUI"));
+	for (int i = 0; i < richEditList->GetSize(); i++)
+	{
+		CRichEditUI* pT = static_cast<CRichEditUI*>((*richEditList)[i]);
+		pT->SetFont(pT->GetFont());
+	}
+}
+
+void DuiLib::CPaintManagerUI::RebuildFont(TFontInfo * pFontInfo)
+{
+	::DeleteObject(pFontInfo->hFont);
+	LOGFONT lf = { 0 };
+	::GetObject(::GetStockObject(DEFAULT_GUI_FONT), sizeof(LOGFONT), &lf);
+	_tcsncpy(lf.lfFaceName, pFontInfo->sFontName, LF_FACESIZE);
+	lf.lfCharSet = DEFAULT_CHARSET;
+	lf.lfHeight = -GetDPIObj()->Scale(pFontInfo->iSize);
+	lf.lfQuality = CLEARTYPE_QUALITY;
+	if (pFontInfo->bBold) lf.lfWeight += FW_BOLD;
+	if (pFontInfo->bUnderline) lf.lfUnderline = TRUE;
+	if (pFontInfo->bItalic) lf.lfItalic = TRUE;
+	HFONT hFont = ::CreateFontIndirect(&lf);
+	pFontInfo->hFont = hFont;
+	::ZeroMemory(&(pFontInfo->tm), sizeof(pFontInfo->tm));
+	if (m_hDcPaint) {
+		HFONT hOldFont = (HFONT) ::SelectObject(m_hDcPaint, hFont);
+		::GetTextMetrics(m_hDcPaint, &pFontInfo->tm);
+		::SelectObject(m_hDcPaint, hOldFont);
+	}
+}
+
 CControlUI* CPaintManagerUI::GetFocus() const
 {
     return m_pFocus;
@@ -2362,7 +2568,7 @@ void CPaintManagerUI::SetDefaultFont(LPCTSTR pStrFontName, int nSize, bool bBold
     ::GetObject(::GetStockObject(DEFAULT_GUI_FONT), sizeof(LOGFONT), &lf);
     _tcsncpy(lf.lfFaceName, pStrFontName, LF_FACESIZE);
     lf.lfCharSet = DEFAULT_CHARSET;
-    lf.lfHeight = -nSize;
+    lf.lfHeight = -GetDPIObj()->Scale(nSize);
     if( bBold ) lf.lfWeight += FW_BOLD;
     if( bUnderline ) lf.lfUnderline = TRUE;
     if( bItalic ) lf.lfItalic = TRUE;
@@ -2417,7 +2623,7 @@ HFONT CPaintManagerUI::AddFont(int id, LPCTSTR pStrFontName, int nSize, bool bBo
     ::GetObject(::GetStockObject(DEFAULT_GUI_FONT), sizeof(LOGFONT), &lf);
     _tcsncpy(lf.lfFaceName, pStrFontName, LF_FACESIZE);
     lf.lfCharSet = DEFAULT_CHARSET;
-    lf.lfHeight = -nSize;
+    lf.lfHeight = -GetDPIObj()->Scale(nSize);
     if( bBold ) lf.lfWeight += FW_BOLD;
     if( bUnderline ) lf.lfUnderline = TRUE;
     if( bItalic ) lf.lfItalic = TRUE;

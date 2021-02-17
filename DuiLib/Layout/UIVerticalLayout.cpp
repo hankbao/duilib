@@ -32,6 +32,8 @@ namespace DuiLib
 		rc = m_rcItem;
 
 		// Adjust for inset
+		RECT m_rcInset = CVerticalLayoutUI::m_rcInset;
+		GetManager()->GetDPIObj()->Scale(&m_rcInset);
 		rc.left += m_rcInset.left;
 		rc.top += m_rcInset.top;
 		rc.right -= m_rcInset.right;
@@ -285,7 +287,7 @@ namespace DuiLib
 
 					CDuiRect rcInvalidate = GetThumbRect(true);
 					m_rcNewPos = rc;
-					m_cxyFixed.cy = m_rcNewPos.bottom - m_rcNewPos.top;
+					m_cxyFixed.cy = GetManager()->GetDPIObj()->Scale(m_rcNewPos.bottom - m_rcNewPos.top);
 
 					if( m_bImmMode ) {
 						m_rcItem = m_rcNewPos;

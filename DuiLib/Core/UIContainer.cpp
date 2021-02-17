@@ -176,6 +176,7 @@ namespace DuiLib
 
 	RECT CContainerUI::GetInset() const
 	{
+		if (m_pManager) return m_pManager->GetDPIObj()->Scale(m_rcInset);
 		return m_rcInset;
 	}
 
@@ -187,6 +188,7 @@ namespace DuiLib
 
 	int CContainerUI::GetChildPadding() const
 	{
+		if (m_pManager) return m_pManager->GetDPIObj()->Scale(m_iChildPadding);
 		return m_iChildPadding;
 	}
 

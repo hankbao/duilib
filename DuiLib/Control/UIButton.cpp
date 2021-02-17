@@ -418,6 +418,9 @@ namespace DuiLib
 		if( m_dwDisabledTextColor == 0 ) m_dwDisabledTextColor = m_pManager->GetDefaultDisabledColor();
 
 		if( m_sText.IsEmpty() ) return;
+
+		RECT m_rcTextPadding = CButtonUI::m_rcTextPadding;
+		GetManager()->GetDPIObj()->Scale(&m_rcTextPadding);
 		int nLinks = 0;
 		RECT rc = m_rcItem;
 		rc.left += m_rcTextPadding.left;

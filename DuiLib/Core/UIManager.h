@@ -110,22 +110,36 @@ typedef struct DUILIB_API tagTImageInfo
     DWORD dwMask;
 } TImageInfo;
 
+class CPaintManagerUI;
 typedef struct DUILIB_API tagTDrawInfo
 {
 	tagTDrawInfo();
-	tagTDrawInfo(LPCTSTR lpsz);
+	void Parse(LPCTSTR pStrImage, LPCTSTR pStrModify, CPaintManagerUI *pManager);
 	void Clear();
+
 	CDuiString sDrawString;
-    CDuiString sImageName;
+	CDuiString sDrawModify;
+	CDuiString sImageName;
+	CDuiString sResType;
 	bool bLoaded;
+
 	const TImageInfo* pImageInfo;
-	RECT rcDestOffset;
+	RECT rcDest;
 	RECT rcBmpPart;
 	RECT rcScale9;
+	RECT rcDestOffset;
+	RECT rcSource;
+	RECT rcCorner;
+	DWORD dwMask;
 	BYTE uFade;
 	bool bHole;
 	bool bTiledX;
 	bool bTiledY;
+	bool bHSL;
+
+	CDuiSize szImage;
+	RECT rcPadding;
+	CDuiString sAlign;
 } TDrawInfo;
 
 typedef struct DUILIB_API tagTPercentInfo
@@ -396,6 +410,12 @@ public:
     static bool TranslateMessage(const LPMSG pMsg);
 	static void Term();
 
+	CDPI* GetDPIObj();
+	void ResetDPIAssets();
+	void RebuildFont(TFontInfo* pFontInfo);
+	void SetDPI(int iDPI);
+	static void SetAllDPI(int iDPI);
+
     bool MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lRes);
     bool PreMessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lRes);
 	void UsedVirtualWnd(bool bUsed);
@@ -486,6 +506,9 @@ private:
     //
 	bool m_bForceUseSharedRes;
 	TResInfo m_ResInfo;
+
+	// DPI
+	CDPI* m_pDPI;
 
     //
 	static HINSTANCE m_hResourceInstance;
