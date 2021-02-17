@@ -35,3 +35,15 @@ CMakeFiles/
 *.VC.db
 *.VC.opendb
 Build/
+360SafeDemo
+bin
+FlashDemo
+GameDemo
+ListDemo
+MenuDemo
+QQDemo
+RichListDemo
+ScrCapture
+TestApp1
+lib
+ipch
