@@ -158,13 +158,18 @@ LRESULT WindowImplBase::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 	}
 
 	RECT rcCaption = m_PaintManager.GetCaptionRect();
-	if( pt.x >= rcClient.left + rcCaption.left && pt.x < rcClient.right - rcCaption.right \
-		&& pt.y >= rcCaption.top && pt.y < rcCaption.bottom ) {
-			CControlUI* pControl = static_cast<CControlUI*>(m_PaintManager.FindControl(pt));
-			if( pControl && _tcsicmp(pControl->GetClass(), DUI_CTR_BUTTON) != 0 && 
-				_tcsicmp(pControl->GetClass(), DUI_CTR_OPTION) != 0 &&
-				_tcsicmp(pControl->GetClass(), DUI_CTR_TEXT) != 0 )
-				return HTCAPTION;
+    if (-1 == rcCaption.bottom) {
+        rcCaption.bottom = rcClient.bottom;
+    } 
+
+	if (pt.x >= rcClient.left + rcCaption.left && pt.x < rcClient.right - rcCaption.right \
+		&& pt.y >= rcCaption.top && pt.y < rcCaption.bottom) {
+		CControlUI* pControl = static_cast<CControlUI*>(m_PaintManager.FindControl(pt));
+		if (pControl && _tcsicmp(pControl->GetClass(), DUI_CTR_BUTTON) != 0 && 
+			_tcsicmp(pControl->GetClass(), DUI_CTR_OPTION) != 0 &&
+			_tcsicmp(pControl->GetClass(), DUI_CTR_TEXT) != 0) {
+			return HTCAPTION;
+		}
 	}
 
 	return HTCLIENT;

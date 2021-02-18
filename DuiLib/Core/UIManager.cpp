@@ -610,7 +610,7 @@ void CPaintManagerUI::SetSizeBox(RECT& rcSizeBox)
 
 RECT& CPaintManagerUI::GetCaptionRect()
 {
-    return m_rcCaption;
+    return GetDPIObj()->Scale(m_rcCaption);
 }
 
 void CPaintManagerUI::SetCaptionRect(RECT& rcCaption)
